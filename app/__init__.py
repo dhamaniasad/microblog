@@ -6,6 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.openid import OpenID
 from flask.ext.mail import Mail
 from flask.ext.babel import Babel, lazy_gettext
+from flask.ext.search import FlaskSearch
 from config import basedir, ADMINS, MAIL_SERVER, MAIL_PORT, MAIL_USERNAME, \
     MAIL_PASSWORD
 from .momentjs import momentjs
@@ -20,6 +21,7 @@ lm.login_message = lazy_gettext('Please log in to access this page.')
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 mail = Mail(app)
 babel = Babel(app)
+app.config['ELASTICSEARCH_INDEX'] = "myflaskapp"
 
 
 class CustomJSONEncoder(JSONEncoder):
@@ -70,3 +72,4 @@ if os.environ.get('HEROKU') is not None:
 app.jinja_env.globals['momentjs'] = momentjs
 
 from app import views, models
+fsearch = FlaskSearch(app, models.Post)
